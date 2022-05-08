@@ -2,36 +2,46 @@ import React from "react";
 import './BookList.css';
 import Book from "./Book";
 import { BookContext } from "../context/BookContext";
+import { ThemeContext } from "../context/ThemeContext";
 
 class BookList extends React.Component {
 
     render() {
 
         return (
-            <BookContext.Consumer>
-                {value => {
-                    return (
-                        <section className="page-section bg-light" id="portfolio">
-                            <div className="container">
-                                <div className="text-center">
-                                    <h2 className="section-heading text-uppercase">BookFolio</h2>
-                                    <h3 className="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
-                                </div>
-                                <div className="row">
+            <ThemeContext.Consumer>{(contextTheme) => (
+                <BookContext.Consumer>
+                    {contextBook => {
+                        const {books} = contextBook;
+                        const { isDarkTheme, dark, light, changeTheme } = contextTheme;
+                        const theme = isDarkTheme ? dark : light;
 
-                                    {
-                                        value.books.map((book, i) => {
-                                            return <Book book={book}
-                                                key={i} />
-                                        })
-                                    }
+                        return (
+                            <section className="page-section" style={{background: theme.bg, color: theme.txt}} id="portfolio">
+                                <div className="container">
+                                    <div className="text-center">
+                                        <h2 className="section-heading text-uppercase">BookFolio</h2>
+                                        <h3 className="section-subheading text-muted">Lorem ipsum dolor sit amet consectetur.</h3>
+                                        <button type="button" className="btn btn-sm btn-info" onClick={changeTheme}>Change Theme</button>
+                                    </div>
+                                    <div className="row">
 
+                                        {
+                                            books.map((book, i) => {
+                                                return <Book book={book}
+                                                    key={i} />
+                                            })
+                                        }
+
+                                    </div>
                                 </div>
-                            </div>
-                        </section>
-                    )
-                }}
-            </BookContext.Consumer>
+                            </section>
+                        )
+                    }}
+                </BookContext.Consumer>
+            )}
+
+            </ThemeContext.Consumer>
         )
 
     }
